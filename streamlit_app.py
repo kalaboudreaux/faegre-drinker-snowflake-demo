@@ -597,9 +597,9 @@ elif page == "📄 Contract Intelligence":
                             "axis": {"range": [0, 100]},
                             "bar": {"color": risk_color},
                             "steps": [
-                                {"range": [0, 40], "color": f"{GR}33"},
-                                {"range": [40, 70], "color": f"{OR}33"},
-                                {"range": [70, 100], "color": f"{RD}33"},
+                                {"range": [0, 40], "color": "rgba(0,196,159,0.2)"},
+                                {"range": [40, 70], "color": "rgba(255,140,66,0.2)"},
+                                {"range": [70, 100], "color": "rgba(255,75,75,0.2)"},
                             ],
                             "threshold": {"line": {"color": risk_color, "width": 3}, "value": contract["risk"]},
                         }
