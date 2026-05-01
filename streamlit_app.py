@@ -2173,7 +2173,7 @@ elif page == "🤖 Cortex AI Lab":
 
         st.markdown(f'<div class="sh" style="font-size:.95rem;">Anomaly Details</div>', unsafe_allow_html=True)
         for mid, anom in all_anomaly_points:
-            akey = f"{mid}_{anom['week']}"
+            akey = f"{mid}_{anom['week']}_{anom['type']}"
             atype_color = RD if anom["type"] == "Spike" else (OR if anom["type"] == "Trend" else "#9B59B6")
             with st.expander(f"{'🔴' if anom['type']=='Spike' else '🟠' if anom['type']=='Trend' else '🟣'} {mid} · {anom['week']} · {anom['type']} ({anom['hours']} hrs)", expanded=False):
                 explain_ph = st.empty()
