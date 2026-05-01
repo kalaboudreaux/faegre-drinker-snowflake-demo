@@ -34,6 +34,9 @@ for key, default in {
     "analyst_running": False,
     "uploaded_file_name": None,
     "uploaded_contract": None,
+    "research_topic": "All",
+    "simulated_client": "Global Pharma Corp",
+    "share_revoked": False,
 }.items():
     if key not in st.session_state:
         st.session_state[key] = default
@@ -530,36 +533,74 @@ MATTERS = [
 
 RESEARCH_QA = {
     "Tortious interference elements in Delaware": {
+        "topic": "Litigation",
         "answer": "Under Delaware law, a **tortious interference** claim requires four elements:\n\n1. **Valid business relationship or expectancy** — not merely a hope, but a reasonable probability of future economic benefit\n2. **Knowledge** of the relationship by the defendant\n3. **Intentional interference** that induces a breach or termination\n4. **Resulting damages** to the plaintiff\n\nCourts emphasize the interference must be *improper* — competition alone is insufficient. Relevant cases include *WaveDivision Holdings v. Highland Capital Mgmt.* (Del. Ch. 2007) and *Lipson v. Anesthesia Services* (Del. Super. 1991).",
         "sources": ["WaveDivision Holdings v. Highland Capital Mgmt., 2007 Del. Ch. LEXIS 88", "Lipson v. Anesthesia Services, 1991 WL 280264 (Del. Super.)", "Restatement (Second) of Torts §766B"],
         "confidence": 97,
+        "followups": ["What damages are recoverable for tortious interference?", "How does Delaware compare to New York on this claim?"],
     },
     "FTC pharmaceutical merger review trends 2024–2026": {
+        "topic": "Regulatory",
         "answer": "FTC pharmaceutical merger review has **intensified significantly** from 2024–2026:\n\n- **Pipeline drug overlaps** — Commission now challenges deals where acquirer holds competing pipeline assets, even pre-approval\n- **Structural divestitures preferred** — behavioral remedies rejected in 8 of 11 challenged deals\n- **'Killer acquisition' scrutiny** — heightened review of large pharma acquiring early-stage competitors\n- **Data concentration theory** — novel harm theory where merger consolidates patient health data\n- **Second Request rate up 34% YoY** — broader investigation scope\n\nNew merger guidelines specific to life sciences emphasize *innovation competition* alongside traditional HHI concentration analysis.",
         "sources": ["FTC v. AbbVie Inc., No. 1:19-cv-02408 (D.D.C. 2024)", "FTC Pharmaceutical Merger Guidelines Update (2025)", "FTC Annual Competition Report 2025"],
         "confidence": 94,
+        "followups": ["What divestitures has FTC required in recent pharma deals?", "How long do Second Requests typically take in life sciences M&A?"],
     },
     "Attorney-client privilege in internal investigations": {
+        "topic": "Litigation",
         "answer": "Internal investigation privilege is governed by ***Upjohn Co. v. United States*** (449 U.S. 383, 1981), extending privilege beyond the 'control group' test. For privilege to apply:\n\n1. Communication made by an **employee to corporate counsel**\n2. Made at the **direction of corporate superiors**\n3. For the **purpose of obtaining legal advice**\n4. Employee must be **aware** the communication is for legal advice\n5. Must remain **confidential**\n\n**2024–2026 developments:** Several circuits have narrowed privilege for mixed business/legal purpose investigations. The DOJ's updated guidelines require privilege logs within 30 days. The 9th Circuit's *In re: Grand Jury* 'primary purpose' test has been adopted by additional circuits, creating new circuit splits.",
         "sources": ["Upjohn Co. v. United States, 449 U.S. 383 (1981)", "In re: Grand Jury, 23 F.4th 1088 (9th Cir. 2023)", "DOJ Internal Investigation Guidelines (2025 Update)"],
         "confidence": 96,
+        "followups": ["Does privilege survive disclosure to outside auditors?", "How does work-product doctrine interact with internal investigation privilege?"],
     },
     "WARN Act requirements for 200+ employee reduction": {
+        "topic": "Employment",
         "answer": "The **WARN Act (29 U.S.C. § 2101)** requires **60 days' advance written notice** for covered plant closings and mass layoffs. For a workforce reduction of 200+ employees:\n\n- **Covered employer threshold:** 100+ full-time employees (or 100+ who work 4,000+ hours/week combined)\n- **Mass layoff trigger:** 500 employees, OR 50–499 employees if they constitute ≥33% of the workforce\n- **Notice recipients:** Affected employees, state dislocated worker unit, and local government\n- **Key exceptions:** Faltering company, unforeseeable business circumstances, natural disaster\n\n**2025 state law note:** Several states (CA, NY, NJ, IL) have enacted mini-WARN statutes with *stricter* thresholds and longer notice periods. California requires 60 days regardless of percentage threshold for 50+ employees.",
         "sources": ["29 U.S.C. § 2101-2109 (WARN Act)", "20 C.F.R. Part 639 (DOL Implementing Regulations)", "Cal. Lab. Code § 1400 et seq. (Cal-WARN)"],
         "confidence": 98,
+        "followups": ["What penalties apply for WARN Act violations?", "How do state mini-WARN statutes differ from federal requirements?"],
+    },
+    "Non-compete enforceability after FTC 2024 rule": {
+        "topic": "Employment",
+        "answer": "The **FTC's Non-Compete Clause Rule** (April 2024) sought to ban most non-competes nationwide, but its enforcement has been enjoined by federal courts:\n\n- **Ryan LLC v. FTC** (N.D. Tex. 2024) — nationwide injunction blocking the rule\n- The 5th Circuit is reviewing; Supreme Court involvement anticipated in 2026\n- **Current state:** Pre-rule state law controls enforceability\n\n**State-by-state snapshot:**\n- **California, Minnesota, Oklahoma, North Dakota** — near-total ban regardless of FTC rule status\n- **Illinois** (2022): Must be $75K+ salary; 14-day advance notice required\n- **New York** (2024): Pending legislation would ban for most employees\n- **Indiana** (Faegre Drinker home state): Enforced with reasonableness test on scope, duration, geography\n\nBest practice: assume non-competes are *unenforceable* in blue-collar/low-wage roles and document legitimate business interest for any executive-level restriction.",
+        "sources": ["Ryan LLC v. FTC, No. 3:24-cv-00986-E (N.D. Tex. 2024)", "FTC Non-Compete Clause Rule, 89 Fed. Reg. 38342 (2024)", "Ind. Code § 24-2-3 (Indiana Trade Secrets Act)"],
+        "confidence": 93,
+        "followups": ["What makes a non-compete 'reasonable' under Indiana law?", "Can trade secret protections substitute for unenforceable non-competes?"],
+    },
+    "HSR filing thresholds and waiting periods 2026": {
+        "topic": "M&A",
+        "answer": "**HSR Act filing thresholds** (revised annually by FTC, effective February 2026):\n\n| Test | Threshold |\n|---|---|\n| Size of transaction | **$119.5M** (up from $111.4M in 2025) |\n| Size of person (larger) | **$239.0M** |\n| Size of person (smaller) | **$23.9M** |\n\n**Waiting periods:**\n- Standard: **30 calendar days** from filing\n- Cash tender offers / bankruptcy: **15 days**\n- Early termination: Suspended since 2021; FTC restarting on case-by-case basis in 2026\n\n**2025–2026 changes:** New HSR rules effective February 2025 require extensive *deal rationale narratives*, labor market analysis, and draft agreements — significantly increasing filing preparation time (average now 6–8 weeks for complex deals vs. 2–3 weeks previously).",
+        "sources": ["16 C.F.R. Part 801 (HSR Rules)", "FTC HSR Threshold Adjustments (Jan. 2026)", "FTC Final Rule: Revised HSR Form, 89 Fed. Reg. 89216 (2025)"],
+        "confidence": 96,
+        "followups": ["What's included in the new HSR deal rationale narrative requirement?", "Which transactions are exempt from HSR filing?"],
+    },
+    "Patent claim construction — means-plus-function claims": {
+        "topic": "IP",
+        "answer": "**Means-plus-function (MPF) claims** under **35 U.S.C. § 112(f)** allow claiming a function without structural limitation, but are construed narrowly:\n\n**Construction standard:**\n1. Claim must use 'means for' language (or functional language without structure)\n2. Scope limited to **corresponding structure** disclosed in the specification + **equivalents**\n3. If no corresponding structure → claim is **indefinite** and invalid\n\n**Key Federal Circuit trends 2024–2026:**\n- *Dyfan v. Target Corp.* (Fed. Cir. 2022) — software MPF claims require algorithm disclosure\n- Heightened definiteness scrutiny for AI/ML patent claims where 'neural network' without architectural detail may be insufficient structure\n- **Prosecution strategy:** Avoid MPF language; disclose multiple structural embodiments; include pseudocode for software-implemented functions\n\n**Litigation risk:** MPF claims are frequently invalidated on § 112 indefiniteness grounds — assess exposure in any Freedom to Operate analysis.",
+        "sources": ["35 U.S.C. § 112(f)", "Dyfan, LLC v. Target Corp., 28 F.4th 1360 (Fed. Cir. 2022)", "Williamson v. Citrix Online LLC, 792 F.3d 1339 (Fed. Cir. 2015)"],
+        "confidence": 95,
+        "followups": ["How should we disclose algorithms in patent specifications?", "What's the risk of MPF invalidity in an existing portfolio?"],
+    },
+    "HIPAA minimum necessary standard for litigation holds": {
+        "topic": "Regulatory",
+        "answer": "The **HIPAA Minimum Necessary Standard (45 C.F.R. § 164.502(b))** requires covered entities to make reasonable efforts to limit PHI use/disclosure to the **minimum necessary** to accomplish the intended purpose.\n\n**Litigation hold intersection:**\n- A litigation hold does *not* automatically satisfy the minimum necessary standard\n- **Permitted disclosures for litigation:** Healthcare operations, required by law, judicial/administrative proceeding\n- For production in litigation: subpoena + satisfactory assurance OR HIPAA-compliant court order required\n\n**2025 OCR guidance:** OCR has clarified that law firms acting as Business Associates must flow down minimum necessary obligations. Litigation counsel receiving PHI under a BAA must:\n1. Limit internal circulation to attorneys/staff with case-specific need\n2. Implement technical safeguards (encryption at rest/transit)\n3. Return or destroy PHI at matter conclusion\n4. Report breaches within **60 days** of discovery\n\n**Penalty exposure:** Tier 4 violations — up to **$1.9M per violation category per year** (2026 adjusted figure).",
+        "sources": ["45 C.F.R. § 164.502(b) (HIPAA Minimum Necessary)", "45 C.F.R. § 164.512(e) (Disclosures for Judicial Proceedings)", "OCR Guidance on Business Associates in Litigation (2025)"],
+        "confidence": 97,
+        "followups": ["What must a BAA include when engaging outside litigation counsel?", "How do we handle HIPAA when responding to a subpoena for medical records?"],
     },
 }
 
 ANALYST_QUERIES = {
     "Which matters are over budget?": {
+        "sql": "SELECT matter_id, client, fees_billed, budget,\n  fees_billed - budget AS over_by,\n  ROUND(fees_billed / budget * 100, 1) AS pct_budget\nFROM matter_portfolio\nWHERE fees_billed > budget\nORDER BY over_by DESC;",
         "cols": ["Matter ID", "Client", "Fees Billed", "Budget", "Over By", "% of Budget"],
         "rows": [
-            ["M-2025-1847", "HealthSystem Partners", "$1,806,000", "$1,800,000", "$6,000", "100.3%"],
             ["M-2026-0089", "National Retail Group", "$384,000", "$350,000", "$34,000", "109.7%"],
+            ["M-2025-1847", "HealthSystem Partners", "$1,806,000", "$1,800,000", "$6,000", "100.3%"],
         ],
     },
-    "Who are the top 3 partners by fees billed this year?": {
+    "Who are the top 3 partners by fees billed?": {
+        "sql": "SELECT partner, practice_group,\n  COUNT(*) AS active_matters,\n  SUM(fees_billed) AS total_fees\nFROM matter_portfolio\nGROUP BY partner, practice_group\nORDER BY total_fees DESC\nLIMIT 3;",
         "cols": ["Partner", "Practice", "Active Matters", "Total Fees Billed"],
         "rows": [
             ["Michelle Park", "Healthcare", "1", "$1,806,000"],
@@ -567,11 +608,34 @@ ANALYST_QUERIES = {
             ["Amanda Foster", "Energy", "1", "$501,000"],
         ],
     },
-    "Show me all litigation matters and their budget status": {
+    "Show me all litigation matters and budget status": {
+        "sql": "SELECT matter_id, client, partner,\n  fees_billed, budget, status\nFROM matter_portfolio\nWHERE matter_type = 'Litigation'\nORDER BY fees_billed DESC;",
         "cols": ["Matter ID", "Client", "Partner", "Fees Billed", "Budget", "Status"],
         "rows": [
             ["M-2026-0042", "Midwest Manufacturing", "James Holloway", "$883,500", "$890,000", "At Risk"],
             ["M-2026-0134", "Energy Holdings LLC", "Amanda Foster", "$501,000", "$600,000", "On Track"],
+        ],
+    },
+    "Which matters have billing velocity above budget pace?": {
+        "sql": "SELECT matter_id, client, partner,\n  hours_billed,\n  ROUND(fees_billed / DATEDIFF('day', open_date, CURRENT_DATE) * 30, 0)\n    AS monthly_burn_rate,\n  budget,\n  status\nFROM matter_portfolio\nWHERE status IN ('At Risk', 'Over Budget')\nORDER BY monthly_burn_rate DESC;",
+        "cols": ["Matter ID", "Client", "Partner", "Hours", "Monthly Burn Rate", "Budget", "Status"],
+        "rows": [
+            ["M-2025-1847", "HealthSystem Partners", "Michelle Park", "1,204", "$180,600/mo", "$1,800,000", "Over Budget"],
+            ["M-2026-0042", "Midwest Manufacturing", "James Holloway", "589", "$88,350/mo", "$890,000", "At Risk"],
+            ["M-2026-0089", "National Retail Group", "Lisa Tran", "256", "$48,000/mo", "$350,000", "Over Budget"],
+        ],
+    },
+    "Break down fees by practice group": {
+        "sql": "SELECT practice_group,\n  COUNT(*) AS matters,\n  SUM(hours_billed) AS total_hours,\n  SUM(fees_billed) AS total_fees,\n  ROUND(AVG(fees_billed / budget * 100), 1) AS avg_budget_pct\nFROM matter_portfolio\nGROUP BY practice_group\nORDER BY total_fees DESC;",
+        "cols": ["Practice Group", "Matters", "Total Hours", "Total Fees", "Avg Budget %"],
+        "rows": [
+            ["Healthcare", "1", "1,204", "$1,806,000", "100.3%"],
+            ["Labor & Employment", "2", "734", "$1,028,500", "93.6%"],
+            ["Energy", "1", "334", "$501,000", "83.5%"],
+            ["Intellectual Property", "1", "256", "$384,000", "109.7%"],
+            ["Life Sciences", "1", "412", "$618,000", "88.3%"],
+            ["Financial Services", "1", "177", "$265,500", "66.4%"],
+            ["Private Equity", "1", "88", "$132,000", "66.0%"],
         ],
     },
 }
@@ -891,24 +955,40 @@ elif page == "🔍 Legal Research AI":
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # Chat interface
+    # Topic filter
+    topics = ["All", "Litigation", "Employment", "Regulatory", "M&A", "IP"]
+    selected_topic = st.segmented_control(
+        "Filter by practice area:",
+        topics,
+        default=st.session_state.research_topic,
+        label_visibility="collapsed",
+    )
+    if selected_topic and selected_topic != st.session_state.research_topic:
+        st.session_state.research_topic = selected_topic
+        st.rerun()
+    active_topic = st.session_state.research_topic or "All"
+
+    # Live activity ticker
+    active_count = random.randint(2, 7)
+    st.markdown(f'<div style="text-align:right;color:{GR};font-size:.78rem;margin-bottom:.3rem;font-weight:600;">● {active_count} attorneys currently running research queries</div>', unsafe_allow_html=True)
+
     chat_container = st.container()
 
-    # Suggestion pills (only if no messages)
+    # Suggestion pills filtered by topic
     if not st.session_state.chat_messages:
-        st.markdown('<div style="color:#888;font-size:.84rem;margin-bottom:.4rem;">Try a sample question:</div>', unsafe_allow_html=True)
-        suggestion = st.pills(
-            "Suggestions",
-            list(RESEARCH_QA.keys()),
-            label_visibility="collapsed",
-        )
-        if suggestion:
-            st.session_state.chat_messages.append({"role": "user", "content": suggestion})
-            st.rerun()
+        filtered_qs = [q for q, v in RESEARCH_QA.items() if active_topic == "All" or v.get("topic") == active_topic]
+        if filtered_qs:
+            st.markdown(f'<div style="color:#888;font-size:.84rem;margin-bottom:.4rem;">Try a sample question{" (" + active_topic + ")" if active_topic != "All" else ""}:</div>', unsafe_allow_html=True)
+            suggestion = st.pills("Suggestions", filtered_qs, label_visibility="collapsed")
+            if suggestion:
+                st.session_state.chat_messages.append({"role": "user", "content": suggestion})
+                st.rerun()
+        else:
+            st.markdown(f'<div style="color:#888;font-size:.84rem;">No sample questions for this topic — type your own below.</div>', unsafe_allow_html=True)
 
     # Render chat history
     with chat_container:
-        for msg in st.session_state.chat_messages:
+        for i, msg in enumerate(st.session_state.chat_messages):
             with st.chat_message(msg["role"], avatar="⚖️" if msg["role"] == "user" else "❄️"):
                 if msg["role"] == "assistant":
                     st.markdown(msg["content"])
@@ -916,16 +996,23 @@ elif page == "🔍 Legal Research AI":
                         with st.expander("📚 Sources & citations", expanded=False):
                             for src in msg["sources"]:
                                 st.markdown(f"- {src}")
-                        col_c, col_t = st.columns(2)
+                        col_c, col_t, col_d = st.columns(3)
                         col_c.metric("Confidence", f"{msg.get('confidence', 95)}%")
                         col_t.metric("Response time", "1.3s")
+                        col_d.metric("Sources retrieved", f"{random.randint(8,24)}")
+                    # Follow-up chips on the last assistant message
+                    if i == len(st.session_state.chat_messages) - 1 and "followups" in msg:
+                        st.markdown('<div style="color:#888;font-size:.8rem;margin-top:.5rem;">💡 Follow-up questions:</div>', unsafe_allow_html=True)
+                        followup = st.pills(f"followup_{i}", msg["followups"], label_visibility="collapsed")
+                        if followup:
+                            st.session_state.chat_messages.append({"role": "user", "content": followup})
+                            st.rerun()
                 else:
                     st.write(msg["content"])
 
     # Handle new input
     if prompt := st.chat_input("Ask a legal research question..."):
         st.session_state.chat_messages.append({"role": "user", "content": prompt})
-
         qa = RESEARCH_QA.get(prompt)
 
         with chat_container:
@@ -943,12 +1030,14 @@ elif page == "🔍 Legal Research AI":
                     with st.expander("📚 Sources & citations", expanded=False):
                         for src in qa["sources"]:
                             st.markdown(f"- {src}")
-                    col_c, col_t = st.columns(2)
+                    col_c, col_t, col_d = st.columns(3)
                     col_c.metric("Confidence", f"{qa['confidence']}%")
                     col_t.metric("Response time", "1.3s")
+                    col_d.metric("Sources retrieved", f"{random.randint(8,24)}")
                     st.session_state.chat_messages.append({
                         "role": "assistant", "content": full,
-                        "sources": qa["sources"], "confidence": qa["confidence"]
+                        "sources": qa["sources"], "confidence": qa["confidence"],
+                        "followups": qa.get("followups", []),
                     })
                 else:
                     def stream_generic():
@@ -967,8 +1056,9 @@ elif page == "🔍 Legal Research AI":
                     st.session_state.chat_messages.append({"role": "assistant", "content": full})
 
     if st.session_state.chat_messages:
-        if st.button("Clear conversation", type="secondary"):
+        if st.button("🗑 Clear conversation", type="secondary"):
             st.session_state.chat_messages = []
+            st.session_state.research_topic = "All"
             st.rerun()
 
 
@@ -985,15 +1075,74 @@ elif page == "📊 Matter Analytics":
 
     df = pd.DataFrame(MATTERS)
 
-    # Practice filter
+    # ── Cortex Analyst (hero section — top) ──────────────────────────────────
+    st.markdown(f"""<div style="background:linear-gradient(135deg,{SN}F5,#1a3a5cF5);
+      border-radius:16px;padding:1.5rem 2rem;margin-bottom:1.5rem;border:1px solid {SB}44;">
+      <div style="color:{SB};font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;">❄️ Cortex Analyst</div>
+      <div style="color:white;font-size:1.15rem;font-weight:700;margin-bottom:.3rem;">Ask any question about your matters in plain English</div>
+      <div style="color:#8BA3B8;font-size:.83rem;">Cortex Analyst translates your question to SQL, runs it against live matter data, and returns the result — no query writing required.</div>
+    </div>""", unsafe_allow_html=True)
+
+    analyst_left, analyst_right = st.columns([2, 3])
+
+    with analyst_left:
+        preset_qs = list(ANALYST_QUERIES.keys())
+        analyst_q = st.selectbox("Choose a question:", preset_qs, label_visibility="collapsed")
+        ask_btn = st.button("▶ Ask Cortex Analyst", type="primary", use_container_width=True)
+        if ask_btn:
+            st.session_state.analyst_query = analyst_q
+            st.session_state.analyst_result = None
+            st.session_state.analyst_running = True
+
+    with analyst_right:
+        sql_ph = st.empty()
+        result_ph = st.empty()
+
+        if st.session_state.analyst_running and st.session_state.analyst_result is None:
+            # Typewriter SQL animation
+            q_key = st.session_state.analyst_query
+            sql_str = ANALYST_QUERIES.get(q_key, {}).get("sql", "SELECT * FROM matter_portfolio;")
+            displayed = ""
+            sql_ph.markdown(f"""<div style="background:#0D1B2A;border-radius:10px;padding:1rem 1.2rem;font-family:monospace;font-size:.78rem;color:#8FBCBB;min-height:80px;">
+              <span style="color:{SB};font-weight:700;">-- Cortex Analyst generated SQL</span><br>{displayed}▌</div>""", unsafe_allow_html=True)
+            for ch in sql_str:
+                displayed += ch
+                if ch in ("\n",):
+                    displayed_html = displayed.replace("\n", "<br>").replace(" ", "&nbsp;")
+                    sql_ph.markdown(f"""<div style="background:#0D1B2A;border-radius:10px;padding:1rem 1.2rem;font-family:monospace;font-size:.78rem;color:#8FBCBB;min-height:80px;">
+                      <span style="color:{SB};font-weight:700;">-- Cortex Analyst generated SQL</span><br>{displayed_html}▌</div>""", unsafe_allow_html=True)
+                    time.sleep(0.04)
+                elif random.random() < 0.08:
+                    displayed_html = displayed.replace("\n", "<br>").replace(" ", "&nbsp;")
+                    sql_ph.markdown(f"""<div style="background:#0D1B2A;border-radius:10px;padding:1rem 1.2rem;font-family:monospace;font-size:.78rem;color:#8FBCBB;min-height:80px;">
+                      <span style="color:{SB};font-weight:700;">-- Cortex Analyst generated SQL</span><br>{displayed_html}▌</div>""", unsafe_allow_html=True)
+                    time.sleep(0.015)
+            time.sleep(0.3)
+            st.session_state.analyst_result = ANALYST_QUERIES[q_key]
+            st.session_state.analyst_running = False
+
+        if st.session_state.analyst_result and st.session_state.analyst_query:
+            q_key = st.session_state.analyst_query
+            sql_str = ANALYST_QUERIES.get(q_key, {}).get("sql", "")
+            displayed_html = sql_str.replace("\n", "<br>").replace(" ", "&nbsp;")
+            sql_ph.markdown(f"""<div style="background:#0D1B2A;border-radius:10px;padding:1rem 1.2rem;font-family:monospace;font-size:.78rem;color:#8FBCBB;min-height:80px;">
+              <span style="color:{SB};font-weight:700;">-- Cortex Analyst generated SQL</span><br>{displayed_html}</div>""", unsafe_allow_html=True)
+            result = st.session_state.analyst_result
+            with result_ph.container():
+                st.markdown(f'<div style="background:{GR}18;border-left:3px solid {GR};padding:.5rem .9rem;border-radius:7px;margin:.5rem 0;font-size:.82rem;color:{SN};font-weight:600;">✅ {q_key} — {len(result["rows"])} rows returned in 0.4s</div>', unsafe_allow_html=True)
+                res_df = pd.DataFrame(result["rows"], columns=result["cols"])
+                st.dataframe(res_df, hide_index=True, use_container_width=True)
+        elif not st.session_state.analyst_result:
+            sql_ph.markdown(f"""<div style="background:#0D1B2A;border-radius:10px;padding:1rem 1.2rem;font-family:monospace;font-size:.78rem;color:#4A5568;min-height:80px;text-align:center;display:flex;align-items:center;justify-content:center;">
+              <span>Select a question and click ▶ Ask Cortex Analyst</span></div>""", unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # ── Practice filter + KPIs ────────────────────────────────────────────────
     practices = ["All Practices"] + sorted(df["practice"].unique().tolist())
     practice_filter = st.pills("Filter by practice:", practices, default="All Practices")
-    if practice_filter and practice_filter != "All Practices":
-        df_filtered = df[df["practice"] == practice_filter]
-    else:
-        df_filtered = df
+    df_filtered = df[df["practice"] == practice_filter] if practice_filter and practice_filter != "All Practices" else df
 
-    # KPIs
     kc1, kc2, kc3, kc4 = st.columns(4)
     with kc1:
         st.markdown(f"""<div class="kpi">
@@ -1024,7 +1173,7 @@ elif page == "📊 Matter Analytics":
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # Alert cards for problem matters
+    # Alert cards
     problem_matters = df_filtered[df_filtered["status"].isin(["Over Budget", "At Risk"])]
     if len(problem_matters) > 0:
         st.markdown(f'<div style="color:{RD};font-weight:700;font-size:.9rem;margin-bottom:.5rem;">⚡ Matters requiring attention ({len(problem_matters)})</div>', unsafe_allow_html=True)
@@ -1048,7 +1197,6 @@ elif page == "📊 Matter Analytics":
         st.markdown("<br>", unsafe_allow_html=True)
 
     col_tbl, col_pie = st.columns([3, 2])
-
     with col_tbl:
         st.markdown('<div class="sh">Matter portfolio</div>', unsafe_allow_html=True)
         display = df_filtered[["id", "client", "practice", "partner", "hrs", "fees", "budget", "status"]].copy()
@@ -1056,7 +1204,6 @@ elif page == "📊 Matter Analytics":
         display["Fees Billed"] = display["Fees Billed"].apply(lambda x: f"${x:,.0f}")
         display["Budget"] = display["Budget"].apply(lambda x: f"${x:,.0f}")
         st.dataframe(display, hide_index=True, use_container_width=True, height=300)
-
     with col_pie:
         st.markdown('<div class="sh">Fees by practice group</div>', unsafe_allow_html=True)
         pie_df = df_filtered.groupby("practice")["fees"].sum().reset_index()
@@ -1067,42 +1214,18 @@ elif page == "📊 Matter Analytics":
         st.plotly_chart(fig_pie, use_container_width=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
-
-    col_bar, col_analyst = st.columns([3, 2])
-
-    with col_bar:
-        st.markdown('<div class="sh">Budget vs. fees billed</div>', unsafe_allow_html=True)
-        fig_bar = go.Figure()
-        fig_bar.add_trace(go.Bar(name="Fees Billed", x=df_filtered["id"], y=df_filtered["fees"],
-                                 marker_color=SB, opacity=.85))
-        fig_bar.add_trace(go.Scatter(name="Budget", x=df_filtered["id"], y=df_filtered["budget"],
-                                     mode="markers", marker=dict(symbol="diamond", size=10, color=RD)))
-        fig_bar.update_layout(plot_bgcolor="white", paper_bgcolor="white", height=280,
-                               margin=dict(l=0, r=0, t=10, b=0), barmode="group",
-                               legend=dict(orientation="h", y=1.1),
-                               yaxis_tickprefix="$", yaxis_tickformat=",.0f",
-                               xaxis=dict(tickangle=-30))
-        st.plotly_chart(fig_bar, use_container_width=True)
-
-    with col_analyst:
-        st.markdown('<div class="sh">Ask Cortex Analyst</div>', unsafe_allow_html=True)
-        st.caption("Ask any question about your matters in plain English")
-
-        preset_qs = list(ANALYST_QUERIES.keys())
-        analyst_q = st.selectbox("Choose a question:", preset_qs, label_visibility="collapsed")
-
-        if st.button("Ask Cortex Analyst →", type="primary", use_container_width=True):
-            st.session_state.analyst_query = analyst_q
-            st.session_state.analyst_result = None
-            with st.spinner("Cortex Analyst translating to SQL and running..."):
-                time.sleep(1.4)
-            st.session_state.analyst_result = ANALYST_QUERIES[analyst_q]
-
-        if st.session_state.analyst_result:
-            result = st.session_state.analyst_result
-            st.markdown(f'<div style="background:{GR}12;border-left:3px solid {GR};padding:.6rem .9rem;border-radius:7px;margin:.5rem 0;font-size:.82rem;color:{SN};font-weight:600;">✅ {st.session_state.analyst_query}</div>', unsafe_allow_html=True)
-            res_df = pd.DataFrame(result["rows"], columns=result["cols"])
-            st.dataframe(res_df, hide_index=True, use_container_width=True)
+    st.markdown('<div class="sh">Budget vs. fees billed</div>', unsafe_allow_html=True)
+    fig_bar = go.Figure()
+    fig_bar.add_trace(go.Bar(name="Fees Billed", x=df_filtered["id"], y=df_filtered["fees"],
+                             marker_color=SB, opacity=.85))
+    fig_bar.add_trace(go.Scatter(name="Budget", x=df_filtered["id"], y=df_filtered["budget"],
+                                 mode="markers", marker=dict(symbol="diamond", size=10, color=RD)))
+    fig_bar.update_layout(plot_bgcolor="white", paper_bgcolor="white", height=280,
+                           margin=dict(l=0, r=0, t=10, b=0), barmode="group",
+                           legend=dict(orientation="h", y=1.1),
+                           yaxis_tickprefix="$", yaxis_tickformat=",.0f",
+                           xaxis=dict(tickangle=-30))
+    st.plotly_chart(fig_bar, use_container_width=True)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -1116,65 +1239,132 @@ elif page == "🤝 Client Collaboration":
       <div class="hero-meta">Snowflake Secure Data Sharing · Zero-Copy Architecture · Row-Level Security</div>
     </div>""", unsafe_allow_html=True)
 
-    toggle_col, _ = st.columns([2, 3])
-    with toggle_col:
-        view_toggle = st.toggle("👤 Simulate Client Login — Global Pharma Corp", value=st.session_state.client_view)
+    # Zero-copy proof bar
+    st.markdown(f"""<div style="background:linear-gradient(90deg,{GR}18,{SB}12);border:1px solid {GR}44;
+      border-radius:10px;padding:.7rem 1.4rem;display:flex;gap:3rem;margin-bottom:1rem;flex-wrap:wrap;">
+      <div style="text-align:center;"><div style="font-size:1.5rem;font-weight:800;color:{GR};">0</div>
+        <div style="font-size:.72rem;color:#666;font-weight:600;text-transform:uppercase;letter-spacing:.06em;">Data Copies Made</div></div>
+      <div style="text-align:center;"><div style="font-size:1.5rem;font-weight:800;color:{GR};">0</div>
+        <div style="font-size:.72rem;color:#666;font-weight:600;text-transform:uppercase;letter-spacing:.06em;">Export Files Created</div></div>
+      <div style="text-align:center;"><div style="font-size:1.5rem;font-weight:800;color:{GR};">0ms</div>
+        <div style="font-size:.72rem;color:#666;font-weight:600;text-transform:uppercase;letter-spacing:.06em;">Sync Latency</div></div>
+      <div style="text-align:center;"><div style="font-size:1.5rem;font-weight:800;color:{SB};">Live</div>
+        <div style="font-size:.72rem;color:#666;font-weight:600;text-transform:uppercase;letter-spacing:.06em;">Data Freshness</div></div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:flex-end;">
+        <span style="background:{GR}22;color:{GR};font-size:.78rem;font-weight:700;padding:.3rem .8rem;border-radius:20px;border:1px solid {GR}44;">
+          ● Snowflake Zero-Copy Architecture
+        </span>
+      </div>
+    </div>""", unsafe_allow_html=True)
+
+    tgl_col, picker_col, _ = st.columns([2, 2, 1])
+    with tgl_col:
+        view_toggle = st.toggle("👤 Simulate Client Login", value=st.session_state.client_view)
         if view_toggle != st.session_state.client_view:
             st.session_state.client_view = view_toggle
+            st.session_state.share_revoked = False
             st.rerun()
 
+    CLIENT_SHARES = {
+        "Global Pharma Corp":   {"share": "FD_GPCorp_MatterShare",  "queries": 284},
+        "HealthSystem Partners": {"share": "FD_HSP_MatterShare",    "queries": 142},
+        "National Retail Group": {"share": "FD_NRG_MatterShare",    "queries": 67},
+    }
+
     if st.session_state.client_view:
-        # Client portal simulation
-        st.markdown(f"""
-        <div style="background:linear-gradient(135deg,{SN},#1a3a5c);padding:1.2rem 1.8rem;border-radius:14px;margin-bottom:1rem;border:2px solid {SB}55;">
-          <div style="color:{SB};font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;">Snowflake Secure Share — Live Matter Portal</div>
-          <div style="color:white;font-size:1.3rem;font-weight:800;margin-top:.3rem;">Global Pharma Corp · Client View</div>
-          <div style="color:#8BA3B8;font-size:.8rem;margin-top:.2rem;">You are viewing data shared by Faegre Drinker Biddle & Reath LLP · Real-time · Zero copies</div>
-        </div>""", unsafe_allow_html=True)
+        with picker_col:
+            sim_client = st.selectbox(
+                "Simulating:", list(CLIENT_SHARES.keys()),
+                index=list(CLIENT_SHARES.keys()).index(st.session_state.simulated_client),
+                label_visibility="visible",
+            )
+            if sim_client != st.session_state.simulated_client:
+                st.session_state.simulated_client = sim_client
+                st.rerun()
 
-        client_matters = [m for m in MATTERS if m["client"] == "Global Pharma Corp"]
+        chosen = st.session_state.simulated_client
+        share_info = CLIENT_SHARES[chosen]
 
-        # Query counter animation
-        qcount_ph = st.empty()
-        for q in range(0, 285, 12):
-            qcount_ph.markdown(f'<div style="text-align:right;color:#888;font-size:.78rem;margin-bottom:.5rem;">⚡ {q} queries run against this share this month</div>', unsafe_allow_html=True)
-            time.sleep(0.01)
-        qcount_ph.markdown(f'<div style="text-align:right;color:{SB};font-size:.78rem;margin-bottom:.5rem;font-weight:600;">⚡ 284 queries run against this share this month</div>', unsafe_allow_html=True)
+        if st.session_state.share_revoked:
+            st.error(f"🚫 Access revoked — {chosen} can no longer query this share.", icon="🔒")
+            if st.button("Restore access", type="secondary"):
+                st.session_state.share_revoked = False
+                st.session_state.client_view = False
+                st.rerun()
+        else:
+            # Client portal header
+            hdr_col, revoke_col = st.columns([5, 1])
+            with hdr_col:
+                st.markdown(f"""
+                <div style="background:linear-gradient(135deg,{SN},#1a3a5c);padding:1.2rem 1.8rem;border-radius:14px;margin-bottom:1rem;border:2px solid {SB}55;">
+                  <div style="color:{SB};font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;">Snowflake Secure Share — Live Matter Portal</div>
+                  <div style="color:white;font-size:1.3rem;font-weight:800;margin-top:.3rem;">{chosen} · Client View</div>
+                  <div style="color:#8BA3B8;font-size:.8rem;margin-top:.2rem;">Viewing data shared by Faegre Drinker Biddle & Reath LLP · Real-time · Zero copies</div>
+                </div>""", unsafe_allow_html=True)
+            with revoke_col:
+                st.markdown("<br>", unsafe_allow_html=True)
+                if st.button("🚫 Revoke Access", type="secondary", use_container_width=True):
+                    st.session_state.share_revoked = True
+                    st.session_state.client_view = False
+                    st.rerun()
 
-        for m in client_matters:
-            pct = m["fees"] / m["budget"] * 100
-            color = GR if pct < 85 else (OR if pct < 100 else RD)
-            st.markdown(f"""<div class="dc">
-              <div style="display:flex;justify-content:space-between;">
-                <div>
-                  <span style="font-weight:700;color:{SN};">{m['id']} — {m['type']}</span>
-                  <span style="color:#888;font-size:.8rem;margin-left:.6rem;">Partner: {m['partner']}</span>
-                </div>
-                <span class="{'b-ok' if m['status']=='On Track' else 'b-warn'}">{m['status']}</span>
-              </div>
-              <div style="display:flex;gap:2.5rem;margin-top:.9rem;">
-                <div><div style="color:#888;font-size:.74rem;">FEES BILLED</div><div style="font-weight:700;font-size:1.2rem;color:{SN};">${m['fees']:,.0f}</div></div>
-                <div><div style="color:#888;font-size:.74rem;">BUDGET</div><div style="font-weight:700;font-size:1.2rem;color:{SN};">${m['budget']:,.0f}</div></div>
-                <div><div style="color:#888;font-size:.74rem;">HOURS</div><div style="font-weight:700;font-size:1.2rem;color:{SN};">{m['hrs']:,}</div></div>
-                <div><div style="color:#888;font-size:.74rem;">BUDGET USED</div><div style="font-weight:700;font-size:1.2rem;color:{color};">{pct:.0f}%</div></div>
-              </div>
-              <div style="background:#F8FAFC;border-radius:6px;height:8px;margin-top:.8rem;">
-                <div style="background:{color};width:{min(pct,100):.0f}%;height:8px;border-radius:6px;transition:width .5s;"></div>
-              </div>
+            client_matters = [m for m in MATTERS if m["client"] == chosen]
+
+            # Live activity feed
+            feed_events = [
+                (f"{chosen[:12]} queried matter billing detail", "just now"),
+                ("Cortex Analyst ran fee summary query", "8s ago"),
+                (f"{chosen[:12]} downloaded matter status report", "24s ago"),
+                ("Row-level policy enforced — 342 matters hidden", "1m ago"),
+                ("Audit log entry written to SNOWFLAKE.ACCOUNT_USAGE", "1m ago"),
+                (f"Share query #{share_info['queries']} completed in 0.2s", "2m ago"),
+            ]
+            feed_ph = st.empty()
+            shown_feed = []
+            for event, ts in feed_events:
+                shown_feed.append((event, ts))
+                rows = "".join(f'<div style="display:flex;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid #F0F4F8;font-size:.8rem;"><span style="color:{SN};">● {e}</span><span style="color:#AAB8C8;">{t}</span></div>' for e, t in shown_feed)
+                feed_ph.markdown(f'<div style="background:white;border:1px solid #E2EBF5;border-radius:10px;padding:.6rem 1rem;margin-bottom:.8rem;"><div style="color:#888;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem;">Live Share Activity</div>{rows}</div>', unsafe_allow_html=True)
+                time.sleep(0.12)
+
+            # Matter cards
+            for m in client_matters:
+                pct = m["fees"] / m["budget"] * 100
+                color = GR if pct < 85 else (OR if pct < 100 else RD)
+                st.markdown(f"""<div class="dc">
+                  <div style="display:flex;justify-content:space-between;">
+                    <div>
+                      <span style="font-weight:700;color:{SN};">{m['id']} — {m['type']}</span>
+                      <span style="color:#888;font-size:.8rem;margin-left:.6rem;">Partner: {m['partner']}</span>
+                    </div>
+                    <span class="{'b-ok' if m['status']=='On Track' else 'b-warn'}">{m['status']}</span>
+                  </div>
+                  <div style="display:flex;gap:2.5rem;margin-top:.9rem;">
+                    <div><div style="color:#888;font-size:.74rem;">FEES BILLED</div><div style="font-weight:700;font-size:1.2rem;color:{SN};">${m['fees']:,.0f}</div></div>
+                    <div><div style="color:#888;font-size:.74rem;">BUDGET</div><div style="font-weight:700;font-size:1.2rem;color:{SN};">${m['budget']:,.0f}</div></div>
+                    <div><div style="color:#888;font-size:.74rem;">HOURS</div><div style="font-weight:700;font-size:1.2rem;color:{SN};">{m['hrs']:,}</div></div>
+                    <div><div style="color:#888;font-size:.74rem;">BUDGET USED</div><div style="font-weight:700;font-size:1.2rem;color:{color};">{pct:.0f}%</div></div>
+                  </div>
+                  <div style="background:#F8FAFC;border-radius:6px;height:8px;margin-top:.8rem;">
+                    <div style="background:{color};width:{min(pct,100):.0f}%;height:8px;border-radius:6px;"></div>
+                  </div>
+                </div>""", unsafe_allow_html=True)
+
+            if not client_matters:
+                st.info(f"No matters found for {chosen} in this demo dataset.")
+
+            st.markdown(f"""<div class="ib">
+              <b style="color:{SN};">🔒 How this works</b><br>
+              <span style="color:#5A6A7A;font-size:.86rem;">{chosen} is querying Faegre Drinker's Snowflake account directly via a secure share — zero data was copied or exported. Row-level security ensures they see <em>only their matters</em>. Click "🚫 Revoke Access" to instantly cut off access in under a second.</span>
             </div>""", unsafe_allow_html=True)
-
-        st.markdown(f"""<div class="ib">
-          <b style="color:{SN};">🔒 How this works</b><br>
-          <span style="color:#5A6A7A;font-size:.86rem;">Global Pharma Corp is querying Faegre Drinker's Snowflake account directly via a secure share — zero data was copied or exported. Row-level security ensures they see <em>only their matters</em>. Faegre Drinker can revoke access in a single click.</span>
-        </div>""", unsafe_allow_html=True)
 
     else:
         # Step-by-step walkthrough
         steps = [
-            ("1", "Create a Row-Level Security view", f"A single SQL view filters matter data by `CURRENT_USER()` — each client automatically sees only their matters when they query the share. No application logic required."),
-            ("2", "Create the secure share", f"Snowflake creates a zero-copy pointer to your data. No data is duplicated, moved, or exported. The share references live production data in real time."),
-            ("3", "Add the client's Snowflake account", f"Specify the client's Snowflake account identifier. They instantly gain access. You control exactly which objects, tables, and columns they can see."),
-            ("4", "Client queries live — always current", f"The client connects their own BI tools (Tableau, Power BI, Sigma, or SQL) to the share. Every query hits live data. No refresh cycles, no stale PDFs, no billing disputes."),
+            ("1", "Create a Row-Level Security view", "A single SQL view filters matter data by `CURRENT_USER()` — each client automatically sees only their matters when they query the share. No application logic required."),
+            ("2", "Create the secure share", "Snowflake creates a zero-copy pointer to your data. No data is duplicated, moved, or exported. The share references live production data in real time."),
+            ("3", "Add the client's Snowflake account", "Specify the client's Snowflake account identifier. They instantly gain access. You control exactly which objects, tables, and columns they can see."),
+            ("4", "Client queries live — always current", "The client connects their own BI tools (Tableau, Power BI, Sigma, or SQL) to the share. Every query hits live data. No refresh cycles, no stale PDFs, no billing disputes."),
         ]
 
         total_steps = len(steps)
@@ -1183,10 +1373,14 @@ elif page == "🤝 Client Collaboration":
         step_cols = st.columns(total_steps)
         for i, (num, title, _) in enumerate(steps):
             is_active = i <= current
+            bg = f"linear-gradient(135deg,{SB},{GR})" if is_active else "#E2EBF5"
+            fc = "white" if is_active else "#888"
+            fw = 700 if is_active else 400
+            tc = SN if is_active else "#999"
             step_cols[i].markdown(f"""<div style="text-align:center;padding:.5rem;">
-              <div style="width:36px;height:36px;border-radius:50%;background:{'linear-gradient(135deg,'+SB+','+GR+')' if is_active else '#E2EBF5'};
-                color:{'white' if is_active else '#888'};font-weight:800;font-size:1rem;display:flex;align-items:center;justify-content:center;margin:0 auto .5rem auto;">{num}</div>
-              <div style="font-size:.78rem;font-weight:{700 if is_active else 400};color:{SN if is_active else '#999'};">{title}</div>
+              <div style="width:36px;height:36px;border-radius:50%;background:{bg};
+                color:{fc};font-weight:800;font-size:1rem;display:flex;align-items:center;justify-content:center;margin:0 auto .5rem auto;">{num}</div>
+              <div style="font-size:.78rem;font-weight:{fw};color:{tc};">{title}</div>
             </div>""", unsafe_allow_html=True)
 
         st.markdown("<br>", unsafe_allow_html=True)
@@ -1225,10 +1419,10 @@ elif page == "🤝 Client Collaboration":
 
         st.markdown("<br>", unsafe_allow_html=True)
         shares_df = pd.DataFrame([
-            {"Client": "Global Pharma Corp",  "Share": "FD_GPCorp_MatterShare", "Matters": 3, "Last Query": "Today, 9:42 AM", "Queries (30d)": 284, "Status": "Active"},
-            {"Client": "HealthSystem Partners","Share": "FD_HSP_MatterShare",   "Matters": 1, "Last Query": "Yesterday, 3:15 PM","Queries (30d)": 142, "Status": "Active"},
-            {"Client": "National Retail Group","Share": "FD_NRG_MatterShare",   "Matters": 1, "Last Query": "Apr 28, 2026",     "Queries (30d)": 67,  "Status": "Active"},
-            {"Client": "Financial Services Co.","Share": "FD_FSC_MatterShare",  "Matters": 1, "Last Query": "—",                "Queries (30d)": 0,   "Status": "Pending"},
+            {"Client": "Global Pharma Corp",   "Share": "FD_GPCorp_MatterShare", "Matters": 1, "Last Query": "Today, 9:42 AM",      "Queries (30d)": 284, "Status": "Active"},
+            {"Client": "HealthSystem Partners", "Share": "FD_HSP_MatterShare",   "Matters": 1, "Last Query": "Yesterday, 3:15 PM",  "Queries (30d)": 142, "Status": "Active"},
+            {"Client": "National Retail Group", "Share": "FD_NRG_MatterShare",   "Matters": 1, "Last Query": "Apr 28, 2026",        "Queries (30d)": 67,  "Status": "Active"},
+            {"Client": "Financial Services Co.","Share": "FD_FSC_MatterShare",   "Matters": 1, "Last Query": "—",                   "Queries (30d)": 0,   "Status": "Pending"},
         ])
         st.markdown('<div class="sh">Active client shares</div>', unsafe_allow_html=True)
         st.dataframe(shares_df, hide_index=True, use_container_width=True)
