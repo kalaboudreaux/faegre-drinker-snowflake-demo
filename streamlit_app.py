@@ -183,6 +183,16 @@ st.markdown(f"""
 
   /* Sidebar */
   div[data-testid="stSidebarContent"] {{ background:{SN}; }}
+  div[data-testid="stSidebarContent"] label,
+  div[data-testid="stSidebarContent"] .stRadio label,
+  div[data-testid="stSidebarContent"] p,
+  div[data-testid="stSidebarContent"] span,
+  div[data-testid="stSidebarContent"] div[role="radiogroup"] label span p {{
+    color: white !important;
+  }}
+  div[data-testid="stSidebarContent"] div[role="radiogroup"] label {{
+    color: white !important;
+  }}
   .stTabs [data-baseweb="tab-list"] {{
     gap:6px; background:white; padding:5px; border-radius:10px; border:1px solid #E2EBF5;
   }}
