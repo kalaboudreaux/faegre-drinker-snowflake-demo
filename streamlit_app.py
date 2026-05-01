@@ -4,6 +4,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 import time
 import random
+import re
+import io
 
 st.set_page_config(
     page_title="Snowflake × Faegre Drinker | AI-Powered Legal Intelligence",
@@ -30,6 +32,8 @@ for key, default in {
     "analyst_query": "",
     "analyst_result": None,
     "analyst_running": False,
+    "uploaded_file_name": None,
+    "uploaded_contract": None,
 }.items():
     if key not in st.session_state:
         st.session_state[key] = default
@@ -235,6 +239,186 @@ with st.sidebar:
 # ═══════════════════════════════════════════════════════════════════════════════
 # Data
 # ═══════════════════════════════════════════════════════════════════════════════
+# ── Contract upload helpers ───────────────────────────────────────────────────
+
+def _extract_text_from_file(uploaded_file) -> tuple[str, int]:
+    """Return (text, page_count) from an uploaded PDF, DOCX, or TXT file."""
+    name = uploaded_file.name.lower()
+    raw = uploaded_file.read()
+    if name.endswith(".pdf"):
+        try:
+            from pypdf import PdfReader
+            reader = PdfReader(io.BytesIO(raw))
+            pages = len(reader.pages)
+            text = "\n".join(p.extract_text() or "" for p in reader.pages)
+            return text, pages
+        except Exception:
+            return "", 0
+    elif name.endswith(".docx"):
+        try:
+            import docx
+            doc = docx.Document(io.BytesIO(raw))
+            text = "\n".join(p.text for p in doc.paragraphs)
+            pages = max(1, len(text) // 3000)
+            return text, pages
+        except Exception:
+            return "", 1
+    else:
+        text = raw.decode("utf-8", errors="replace")
+        pages = max(1, len(text) // 3000)
+        return text, pages
+
+
+def _find(pattern, text, default="Not identified"):
+    m = re.search(pattern, text, re.IGNORECASE)
+    return m.group(1).strip() if m else default
+
+
+def analyze_uploaded_contract(uploaded_file) -> dict:
+    """Extract text and run clause/risk analysis on a user-uploaded contract."""
+    text, pages = _extract_text_from_file(uploaded_file)
+    filename = uploaded_file.name
+    base_id = re.sub(r"[^A-Z0-9]", "-", filename.upper().replace(".PDF", "").replace(".DOCX", "").replace(".TXT", ""))[:20]
+    contract_id = f"UPL-{base_id[:15]}"
+
+    # ── Clause extraction ────────────────────────────────────────────────────
+    gov_law = _find(r"governed by (?:the laws? of )?(?:the (?:State|Commonwealth) of )?([A-Z][a-zA-Z ]{2,30})", text)
+    if gov_law == "Not identified":
+        gov_law = _find(r"laws? of (?:the (?:State|Commonwealth) of )?([A-Z][a-zA-Z]{3,20})", text)
+
+    term_notice = _find(r"(\d+)[- ]days?['\s]+(?:written |prior )?notice", text)
+    if term_notice != "Not identified":
+        term_notice = f"{term_notice} days written notice"
+
+    liab_cap_raw = _find(r"(?:shall not exceed|limited to|cap(?:ped)? at)\s+(\$[\d,]+(?:\.\d+)?(?:\s*(?:million|thousand))?)", text)
+    liab_cap = liab_cap_raw if liab_cap_raw != "Not identified" else "Not specified — review required"
+
+    auto_renew_match = re.search(r"auto(?:matically)?[\s-]renew|automatic(?:ally)? renew|evergreen", text, re.IGNORECASE)
+    auto_renew = "Yes — check for opt-out window" if auto_renew_match else "No"
+
+    conf_period = _find(r"(\d+)[- ]years? (?:following|after|from|post)[- ](?:termination|expiration|expiry)", text)
+    conf_period = f"{conf_period} years post-termination" if conf_period != "Not identified" else _find(r"confidentiality.*?(?:period|term)[^.]{0,40}(\d+ year[s]?)", text)
+
+    eff_date = _find(r"(?:effective|commencing|as of)[:\s]+([A-Z][a-z]+ \d{1,2},? \d{4}|\d{1,2}/\d{1,2}/\d{4})", text)
+    exp_date = _find(r"(?:expires?|expiration|terminates?|end date)[:\s]+([A-Z][a-z]+ \d{1,2},? \d{4}|\d{1,2}/\d{1,2}/\d{4})", text)
+    dollar_vals = re.findall(r"\$[\d,]+(?:\.\d+)?(?:\s*(?:million|thousand))?", text, re.IGNORECASE)
+    contract_value = max(dollar_vals, key=lambda x: len(x), default="Not specified") if dollar_vals else "Not specified"
+
+    extracted = [
+        ("Governing Law", gov_law),
+        ("Termination Notice", term_notice),
+        ("Liability Cap", liab_cap),
+        ("Auto-Renewal", auto_renew),
+        ("Confidentiality Period", conf_period),
+        ("Effective Date", eff_date),
+        ("Expiry Date", exp_date),
+        ("Contract Value", contract_value),
+    ]
+
+    # ── Obligation sentences ─────────────────────────────────────────────────
+    sentences = re.split(r"(?<=[.;])\s+", text)
+    obligation_keywords = re.compile(
+        r"\b(shall|must|required to|agrees? to|obligated to|will provide|will deliver)\b",
+        re.IGNORECASE,
+    )
+    deadline_keywords = re.compile(r"\b(by |within \d|no later than|prior to|before )\b", re.IGNORECASE)
+    obligations = []
+    for s in sentences:
+        s = s.strip()
+        if 20 < len(s) < 220 and obligation_keywords.search(s):
+            label = "⚠️ DEADLINE" if deadline_keywords.search(s) else ""
+            obligations.append(f"{label} {s}".strip() if label else s)
+        if len(obligations) >= 6:
+            break
+    if not obligations:
+        obligations = ["Review document manually — obligation clauses not clearly structured"]
+
+    # ── Risk scoring ─────────────────────────────────────────────────────────
+    score = 20
+    flags = []
+
+    if liab_cap_raw == "Not identified":
+        score += 20
+        flags.append(("No liability cap found — significant exposure risk", False))
+
+    if gov_law == "Not identified":
+        score += 15
+        flags.append(("Governing law not identified — jurisdiction risk", False))
+
+    if auto_renew_match:
+        score += 12
+        flags.append(("Auto-renewal clause detected — verify opt-out window and deadline", False))
+
+    if re.search(r"\bindemnif", text, re.IGNORECASE):
+        score += 10
+        flags.append(("Indemnification clause present — review scope and carve-outs", False))
+
+    if re.search(r"\bAI\b|artificial intelligence|machine learning|generative", text, re.IGNORECASE):
+        score += 8
+        flags.append(("AI/ML references detected — review IP ownership and data usage clauses", False))
+
+    if re.search(r"perpetual|indefinite|no expir", text, re.IGNORECASE):
+        score += 8
+        flags.append(("Perpetual or indefinite term detected — confirm intent", False))
+
+    if re.search(r"arbitrat|dispute resolution|mediat", text, re.IGNORECASE):
+        score += 5
+        flags.append(("Dispute resolution / arbitration clause present", False))
+
+    large_dollar = any(
+        float(re.sub(r"[,$]", "", v.split()[0])) >= 1_000_000
+        for v in dollar_vals
+        if re.sub(r"[,$]", "", v.split()[0]).replace(".", "").isdigit()
+    ) if dollar_vals else False
+    if large_dollar:
+        score += 8
+        flags.append(("High-value contract — enhanced review recommended", False))
+
+    if not flags:
+        flags.append(("No major risk flags detected — document appears standard", False))
+
+    score = min(score, 98)
+    risk_label = "High" if score >= 70 else ("Medium" if score >= 40 else "Low")
+
+    contract_type = "Unknown"
+    if re.search(r"\bnon.?disclosure\b|\bNDA\b|\bconfidentiality agreement\b", text, re.IGNORECASE):
+        contract_type = "Non-Disclosure Agreement"
+    elif re.search(r"\bmaster services\b|\bMSA\b", text, re.IGNORECASE):
+        contract_type = "Master Services Agreement"
+    elif re.search(r"\bengagement letter\b|\bretainer\b", text, re.IGNORECASE):
+        contract_type = "Engagement Letter"
+    elif re.search(r"\bvendor\b|\bservices agreement\b|\bstatement of work\b|\bSOW\b", text, re.IGNORECASE):
+        contract_type = "Services / Vendor Agreement"
+    elif re.search(r"\blicense\b|\blicensing\b", text, re.IGNORECASE):
+        contract_type = "License Agreement"
+    elif re.search(r"\blease\b|\btenancy\b|\bpremises\b", text, re.IGNORECASE):
+        contract_type = "Lease Agreement"
+
+    client_match = re.search(
+        r"(?:between|party|client|customer)[:\s]+([A-Z][A-Za-z\s,\.]{4,50}(?:LLC|Inc\.|Corp\.|LLP|Ltd\.)?)",
+        text,
+    )
+    client = client_match.group(1).strip()[:50] if client_match else "Unknown Party"
+
+    return {
+        "id": contract_id,
+        "label": f"📎 {filename}",
+        "client": client,
+        "type": contract_type,
+        "pages": pages,
+        "effective": eff_date,
+        "expires": exp_date,
+        "value": contract_value,
+        "status": "Uploaded",
+        "risk": score,
+        "risk_label": risk_label,
+        "extracted": extracted,
+        "obligations": obligations,
+        "risk_flags": flags,
+        "_uploaded": True,
+    }
+
+
 CONTRACTS = [
     {
         "id": "MSA-2024-0142", "label": "Global Pharma Corp — Master Services Agreement",
@@ -514,19 +698,31 @@ elif page == "📄 Contract Intelligence":
       <div class="hero-meta">Snowflake Cortex AI · AI_EXTRACT · AI_FILTER · AI_SUMMARIZE</div>
     </div>""", unsafe_allow_html=True)
 
-    # Step 1 — "Upload" selector
-    st.markdown('<div class="sh">Step 1 — Select a contract to analyze</div>', unsafe_allow_html=True)
-    st.markdown(f"""
-    <div style="background:white;border:2px dashed {SB}88;border-radius:14px;padding:1.8rem 2rem;text-align:center;margin-bottom:1rem;">
-      <div style="font-size:2.5rem;margin-bottom:.5rem;">📁</div>
-      <div style="color:{SN};font-weight:700;font-size:1rem;">Drag & drop a contract PDF here</div>
-      <div style="color:#888;font-size:.83rem;margin-top:.3rem;">or choose one of the sample contracts below</div>
-    </div>""", unsafe_allow_html=True)
+    # Step 1 — Upload or select a sample contract
+    st.markdown('<div class="sh">Step 1 — Upload a contract or choose a sample</div>', unsafe_allow_html=True)
 
-    contract_labels = [c["label"] for c in CONTRACTS]
-    selected_label = st.radio("Sample contracts:", contract_labels, label_visibility="collapsed",
-                              horizontal=False)
-    contract = next(c for c in CONTRACTS if c["label"] == selected_label)
+    uploaded_file = st.file_uploader(
+        "Drag & drop a contract file here",
+        type=["pdf", "docx", "txt"],
+        help="Your file is processed in-memory and never stored on any server",
+        label_visibility="collapsed",
+    )
+
+    if uploaded_file is not None:
+        if st.session_state.uploaded_file_name != uploaded_file.name:
+            st.session_state.uploaded_file_name = uploaded_file.name
+            st.session_state.contract_done = {}
+            with st.spinner("Extracting text from document..."):
+                uploaded_file.seek(0)
+                st.session_state.uploaded_contract = analyze_uploaded_contract(uploaded_file)
+        contract = st.session_state.uploaded_contract
+        st.markdown(f'<div style="background:#F0FBF8;border:1px solid {GR};border-radius:10px;padding:.7rem 1.1rem;font-size:.88rem;color:{SN};margin-bottom:.5rem;">📎 <b>{uploaded_file.name}</b> &nbsp;·&nbsp; {contract["pages"]} pages detected &nbsp;·&nbsp; <span style="color:{GR};font-weight:700;">Ready to analyze</span></div>', unsafe_allow_html=True)
+    else:
+        st.markdown(f'<div style="color:#888;font-size:.83rem;margin:.4rem 0 .5rem 0;">— or choose a sample contract below —</div>', unsafe_allow_html=True)
+        contract_labels = [c["label"] for c in CONTRACTS]
+        selected_label = st.radio("Sample contracts:", contract_labels, label_visibility="collapsed",
+                                  horizontal=False)
+        contract = next(c for c in CONTRACTS if c["label"] == selected_label)
 
     if st.session_state.contract_selected != contract["id"]:
         st.session_state.contract_selected = contract["id"]
