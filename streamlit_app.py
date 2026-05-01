@@ -215,12 +215,12 @@ with st.sidebar:
 
     page = st.radio("Navigate", [
         "🏠 Overview",
+        "🤖 Legal AI Lab",
         "📄 Contract Intelligence",
         "🔍 Legal Research AI",
         "📊 Matter Analytics",
         "🤝 Client Collaboration",
         "🔒 Compliance & Governance",
-        "🤖 Cortex AI Lab",
         "💰 ROI Calculator",
     ], label_visibility="collapsed")
 
@@ -1821,10 +1821,10 @@ elif page == "🔒 Compliance & Governance":
 # ═══════════════════════════════════════════════════════════════════════════════
 # Page: Cortex AI Lab
 # ═══════════════════════════════════════════════════════════════════════════════
-elif page == "🤖 Cortex AI Lab":
+elif page == "🤖 Legal AI Lab":
     st.markdown(f"""
     <div class="hero">
-      <div class="hero-title">🤖 Cortex AI Lab</div>
+      <div class="hero-title">🤖 Legal AI Lab</div>
       <div class="hero-sub">Five live demonstrations of Snowflake Cortex AI — from document intelligence to predictive analytics</div>
       <div class="hero-meta">AI_SUMMARIZE · AI_CLASSIFY · AI_SENTIMENT · AI_EXTRACT · AI_FILTER · AI_COMPLETE · Cortex ML</div>
     </div>""", unsafe_allow_html=True)
